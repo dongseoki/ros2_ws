@@ -1,3 +1,4 @@
+```sh
   1  /opt/ros/jazzy/setup.bash
     2  source /opt/ros/jazzy/setup.bash
     3  ros2
@@ -15,3 +16,4 @@
    15  cd ..
    16  colcon build
    17  colcon build --packages-select my_pk_pkg
+```
