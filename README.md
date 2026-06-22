@@ -40,3 +40,8 @@ source ~/.bashrc
 ros2 run my_py_pkg py_node
 
 ```
+
+# python node with OOP
+* colcon build --packages-select my_py_pkg
+* source install/setup.bash
+* ros2 run my_py_pkg py_node
