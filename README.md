@@ -30,3 +30,13 @@ cd ros2_ws/src/
    51  colcon build
    52  colcon build --packages-select my_cpp_pkg
 ```
+
+# write a python node
+* exeutable name
+* node name
+* file name -> my_first_node
+```sh
+source ~/.bashrc
+ros2 run my_py_pkg py_node
+
+```
