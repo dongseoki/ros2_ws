@@ -50,3 +50,10 @@ ros2 run my_py_pkg py_node
 * colcon build --packages-select my_cpp_pkg
 * source install/setup.bash
 * ros2 run my_cpp_pkg cpp_node
+
+# python publisher
+```sh
+colcon build --packages-select my_py_pkg --symlink-install
+ros2 run my_py_pkg robot_news_station
+ros2 topic echo /robot_news
+```
