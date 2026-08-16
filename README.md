@@ -74,3 +74,11 @@ ros2 node list
 ros2 node info /robot_news_station
 ros2 topic echo /robot_news
 ```
+
+# cpp subscriber
+```sh
+ros2 node list
+ros2 node info /smartphone_node
+ros2 run my_cpp_pkg robot_news_station
+ros2 run my_cpp_pkg smartphone
+```
