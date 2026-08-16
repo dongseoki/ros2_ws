@@ -57,3 +57,9 @@ colcon build --packages-select my_py_pkg --symlink-install
 ros2 run my_py_pkg robot_news_station
 ros2 topic echo /robot_news
 ```
+
+# python subscriber
+```sh
+colcon build --packages-select my_py_pkg --symlink-install
+ros2 run my_py_pkg smartphone
+```
