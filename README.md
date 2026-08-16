@@ -63,3 +63,14 @@ ros2 topic echo /robot_news
 colcon build --packages-select my_py_pkg --symlink-install
 ros2 run my_py_pkg smartphone
 ```
+* ros2 interface show example_interfaces/msg/String
+
+# cpp publisher
+```sh
+colcon build --packages-select my_cpp_pkg
+source install/setup.bash
+ros2 run my_cpp_pag robot_news_station
+ros2 node list
+ros2 node info /robot_news_station
+ros2 topic echo /robot_news
+```
