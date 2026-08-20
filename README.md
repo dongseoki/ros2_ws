@@ -82,3 +82,11 @@ ros2 node info /smartphone_node
 ros2 run my_cpp_pkg robot_news_station
 ros2 run my_cpp_pkg smartphone
 ```
+
+# section5, activity02
+```sh
+ros2 interface show example_interfaces/msg/Int64
+colcon build --packages-select my_py_pkg --symlink-install
+ros2 run my_py_pkg number_publisher
+ros2 topic echo /number
+```

@@ -6,9 +6,9 @@ from example_interfaces.msg import String
 
 class RobotNewsStation(Node):  # MODIFY NAME
     def __init__(self):
-        super().__init__("robot_news_station")  # NODE NAME
-        self.robot_name = "R2-D2"  # MODIFY NAME
-        self.publisher_ = self.create_publisher(String, "robot_news", 10)  # TOPIC NAME
+        super().__init__("robot_news_station")
+        self.robot_name = "R2-D2"
+        self.publisher_ = self.create_publisher(String, "robot_news", 10)
         self.timer = self.create_timer(1.0, self.timer_callback)  # 1 second timer
         self.get_logger().info("Robot News Station node has been started.")
 
