@@ -90,3 +90,28 @@ colcon build --packages-select my_py_pkg --symlink-install
 ros2 run my_py_pkg number_publisher
 ros2 topic echo /number
 ```
+
+# section5, activity02 finish
+```sh
+colcon build --packages-select my_py_pkg --symlink-install
+source install/setup.bash
+ros2 run my_py_pkg number_publisher
+```
+
+In another terminal, source the workspace and run the counter:
+
+```sh
+source install/setup.bash
+ros2 run my_py_pkg number_counter
+```
+
+In a third terminal, source the workspace and observe the accumulated values:
+
+```sh
+source install/setup.bash
+ros2 topic echo /number_count
+```
+
+The publisher sends `2` every second, so `/number_count` should output `2`,
+`4`, `6`, and so on. The counter log should also show the initial value `0`
+and each updated accumulated value.
