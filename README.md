@@ -115,3 +115,14 @@ ros2 topic echo /number_count
 The publisher sends `2` every second, so `/number_count` should output `2`,
 `4`, `6`, and so on. The counter log should also show the initial value `0`
 and each updated accumulated value.
+
+# section 06
+## python server
+```sh
+s_ros
+cd ros_ws
+ros2 run my_py_pkg add_two_ints_server
+ros2 interface show example_interfaces/srv/AddTwoInts
+colcon build --packages-select my_py_pkg --symlink-install
+ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts "{a: 3, b: 7}"
+```
