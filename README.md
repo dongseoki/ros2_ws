@@ -126,3 +126,7 @@ ros2 interface show example_interfaces/srv/AddTwoInts
 colcon build --packages-select my_py_pkg --symlink-install
 ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts "{a: 3, b: 7}"
 ```
+
+```sh
+ros2 run my_py_pkg add_two_ints_client_no_oop
+```
