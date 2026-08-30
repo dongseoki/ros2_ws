@@ -145,4 +145,13 @@ cd ~/ros2_ws
 s_ros
 ros2 run my_py_pkg add_two_ints_client_no_oop
 
+
+```
+
+## cpp client
+```sh
+cd ~/ros2_ws
+s_ros
+ros2 run my_cpp_pkg add_two_ints_client_no_oop
+
 ```
