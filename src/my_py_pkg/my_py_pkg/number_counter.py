@@ -33,10 +33,14 @@ class NumberCounterNode(Node):
     def reset_counter_callback(self, request : SetBool.Request, response : SetBool.Response):
         if request.data:
             self.number_count_ = 0
+            response.success = True
+            response.message = f"Number count is now: {self.number_count_}"
             self.get_logger().info("Number count has been reset to 0.")
         else:
+            response.success = False
+            response.message = "Reset request received, but no action taken."
             self.get_logger().info("Reset request received, but no action taken.")
-        response.success = True
+
         return response
 
 def main(args=None):
