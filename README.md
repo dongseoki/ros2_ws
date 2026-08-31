@@ -155,3 +155,26 @@ s_ros
 ros2 run my_cpp_pkg add_two_ints_client_no_oop
 
 ```
+
+# inspect service
+```sh
+370  ros2 service list
+  371  ros2 service -h
+  372  ros2 service info /add_two_ints
+  373  ros2 service type /add_two_ints
+  374  ros2 interface show example_interfaces/srv/AddTwoInts
+  375  rqt
+
+  ros2 run my_py_pkg add_two_ints_server --ros-args -r /add_two_ints:=/my_service
+
+```
+
+# activity06
+```sh
+colcon build --packages-select my_py_pkg --symlink-install
+ros2 run my_py_pkg number_publisher
+ros2 run my_py_pkg number_counter
+ros2 topic echo /number_count
+ros2 service call /reset_counter example_interfaces/srv/SetBool "{data: true}"
+ros2 service call /reset_counter example_interfaces/srv/SetBool "{data: false}"
+```
