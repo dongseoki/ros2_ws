@@ -178,3 +178,10 @@ ros2 topic echo /number_count
 ros2 service call /reset_counter example_interfaces/srv/SetBool "{data: true}"
 ros2 service call /reset_counter example_interfaces/srv/SetBool "{data: false}"
 ```
+# section07 custom interfaces
+```sh
+colcon build --packages-select my_robot_interfaces 
+source ~/.bashrc
+ros2 interface list | grep my_robot
+ros2 interface show my_robot_interfaces/msg/HardwareStatus
+```
