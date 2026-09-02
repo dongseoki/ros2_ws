@@ -185,3 +185,13 @@ source ~/.bashrc
 ros2 interface list | grep my_robot
 ros2 interface show my_robot_interfaces/msg/HardwareStatus
 ```
+
+## custom interface with python
+```sh
+colcon build --packages-select my_py_pkg --symlink-install
+ros2 run my_py_pkg hardware_status_publisher
+
+source ~/.bashrc
+ros2 topic echo /hardware_status
+
+```
