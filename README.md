@@ -195,3 +195,14 @@ source ~/.bashrc
 ros2 topic echo /hardware_status
 
 ```
+
+## custom interface with cpp
+```sh
+# before this must check .vscode/c_cpp_properties.json
+colcon build --packages-select my_cpp_pkg
+ros2 run my_cpp_pkg hardware_status_publisher
+
+source ~/.bashrc
+ros2 topic echo /hardware_status
+
+```
