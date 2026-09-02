@@ -206,3 +206,14 @@ source ~/.bashrc
 ros2 topic echo /hardware_status
 
 ```
+## custom srv
+```sh
+colcon build --packages-select my_robot_interfaces
+
+source ~/.bashrc
+ds@ds-vm:~/ros2_ws$ ros2 interface show my_robot_interfaces/srv/ComputeRectangleArea
+float64 length
+float64 width
+---
+float64 area
+```
