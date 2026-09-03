@@ -217,3 +217,12 @@ float64 width
 ---
 float64 area
 ```
+
+## activity07
+```sh
+colcon build --packages-select my_robot_interfaces
+ros2 topic echo /led_panel_state
+
+ros2 interface show my_robot_interfaces/msg/LedPanelState
+
+```
