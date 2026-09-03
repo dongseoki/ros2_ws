@@ -230,4 +230,6 @@ ros2 run my_cpp_pkg led_panel
 
 ros2 topic echo /led_panel_state
 
+ros2 run my_cpp_pkg battery
+
 ```
