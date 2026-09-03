@@ -18,6 +18,8 @@ private:
     void battery_callback()
     {
         elapsed_seconds_++;
+        // print current time and elapsed seconds
+        RCLCPP_INFO(this->get_logger(), "Current time: %.2f, Elapsed seconds: %d", this->now().seconds(), elapsed_seconds_);
 
         if (elapsed_seconds_ == 4) {
             RCLCPP_INFO(this->get_logger(), "Battery is empty");
@@ -42,14 +44,19 @@ private:
             RCLCPP_INFO(this->get_logger(), "Service not available, waiting again...");
         }
 
-        auto future = client_->async_send_request(request);
+        auto future = client_->async_send_request(request, std::bind(&BatteryNode::callbackCallSetLedService, this, std::placeholders::_1));
+        
+    }
+
+    void callbackCallSetLedService(rclcpp::Client<my_robot_interfaces::srv::SetLed>::SharedFuture future)
+    {
         try {
-            auto response = future.get();
-            if (response->success) {
-                RCLCPP_INFO(this->get_logger(), "Successfully set LED %d to %s", led_number, state ? "ON" : "OFF");
-            } else {
-                RCLCPP_WARN(this->get_logger(), "Failed to set LED %d to %s", led_number, state ? "ON" : "OFF");
-            }
+        auto response = future.get();
+        if (response->success) {
+            RCLCPP_INFO(this->get_logger(), "Successfully set LED");
+        } else {
+            RCLCPP_WARN(this->get_logger(), "Failed to set LED ");
+        }
         } catch (const std::exception & e) {
             RCLCPP_ERROR(this->get_logger(), "Service call failed: %s", e.what());
         }
