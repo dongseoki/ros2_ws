@@ -315,7 +315,6 @@ $RECYCLE.BIN/
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -323,7 +322,6 @@ $RECYCLE.BIN/
 
 src/.vscode/*
 
-!src/.vscode/.vscode/settings.json
 !src/.vscode/.vscode/tasks.json
 !src/.vscode/.vscode/launch.json
 !src/.vscode/.vscode/extensions.json
