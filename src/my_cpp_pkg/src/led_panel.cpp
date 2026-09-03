@@ -1,6 +1,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "example_interfaces/msg/string.hpp"
 #include "my_robot_interfaces/msg/led_panel_state.hpp"
+#include "my_robot_interfaces/srv/set_led.hpp"
 
 class LedPanelNode : public rclcpp::Node 
 {
@@ -36,8 +37,12 @@ private:
         const std::shared_ptr<my_robot_interfaces::srv::SetLed::Request> request,
         std::shared_ptr<my_robot_interfaces::srv::SetLed::Response> response)
     {
-        // current_led_states.led_states[request.led_number] = request ->state
-        // current_led_states.led_states = request->led_states;
+        if (request->led_number < 0 || request->led_number >= 3) {
+            RCLCPP_WARN(this->get_logger(), "Invalid LED number: %d. Must be between 0 and 2.", request->led_number);
+            response->success = false;
+            return;
+        }
+        current_led_states.led_states[request->led_number] = request->state;
         response->success = true;
         RCLCPP_INFO(
             this->get_logger(),
