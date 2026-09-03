@@ -7,7 +7,7 @@ class LedPanelNode : public rclcpp::Node
 public:
     LedPanelNode() : Node("led_panel"), current_led_states{}
     {
-        publisher_ = this->create_publisher<my_robot_interfaces::msg::LedPanelState>("led_panel", 10); 
+        publisher_ = this->create_publisher<my_robot_interfaces::msg::LedPanelState>("led_panel_state", 10); 
         timer_ = this->create_wall_timer(
             std::chrono::seconds(1),
             std::bind(&LedPanelNode::publish_led_status, this));                                     

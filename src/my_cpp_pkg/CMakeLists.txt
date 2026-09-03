@@ -32,8 +32,8 @@ ament_target_dependencies(add_two_ints_client rclcpp example_interfaces)
 add_executable(hardware_status_publisher src/hardware_status_publisher.cpp)
 ament_target_dependencies(hardware_status_publisher rclcpp my_robot_interfaces)
 
-add_executable(led_panel_node src/led_panel_node.cpp)
-ament_target_dependencies(led_panel_node rclcpp example_interfaces)
+add_executable(led_panel src/led_panel.cpp)
+ament_target_dependencies(led_panel rclcpp example_interfaces my_robot_interfaces)
 
 
 install(TARGETS
@@ -44,7 +44,7 @@ install(TARGETS
   add_two_ints_client_no_oop
   add_two_ints_client
   hardware_status_publisher
-  led_panel_node
+  led_panel
   DESTINATION lib/${PROJECT_NAME}
 )
 

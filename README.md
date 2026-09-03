@@ -225,4 +225,9 @@ ros2 topic echo /led_panel_state
 
 ros2 interface show my_robot_interfaces/msg/LedPanelState
 
+colcon build --packages-select my_cpp_pkg
+ros2 run my_cpp_pkg led_panel
+
+ros2 topic echo /led_panel_state
+
 ```
