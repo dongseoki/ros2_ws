@@ -15,7 +15,7 @@ add_executable(cpp_node src/my_first_node.cpp)
 ament_target_dependencies(cpp_node rclcpp example_interfaces )
 
 add_executable(robot_news_station src/robot_news_station.cpp)
-ament_target_dependencies(robot_news_station rclcpp example_interfaces) 
+ament_target_dependencies(robot_news_station rclcpp example_interfaces)
 
 add_executable(smartphone src/smartphone.cpp)
 ament_target_dependencies(smartphone rclcpp example_interfaces)
@@ -38,6 +38,8 @@ ament_target_dependencies(led_panel rclcpp example_interfaces my_robot_interface
 add_executable(battery src/battery.cpp)
 ament_target_dependencies(battery rclcpp my_robot_interfaces)
 
+add_executable(number_publisher src/number_publisher.cpp)
+ament_target_dependencies(number_publisher rclcpp example_interfaces)
 
 install(TARGETS
   cpp_node
@@ -49,6 +51,7 @@ install(TARGETS
   hardware_status_publisher
   led_panel
   battery
+  number_publisher
   DESTINATION lib/${PROJECT_NAME}
 )
 

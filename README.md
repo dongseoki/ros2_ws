@@ -180,7 +180,7 @@ ros2 service call /reset_counter example_interfaces/srv/SetBool "{data: false}"
 ```
 # section07 custom interfaces
 ```sh
-colcon build --packages-select my_robot_interfaces 
+colcon build --packages-select my_robot_interfaces
 source ~/.bashrc
 ros2 interface list | grep my_robot
 ros2 interface show my_robot_interfaces/msg/HardwareStatus
@@ -235,3 +235,20 @@ ros2 run my_cpp_pkg battery
 ```
 
 
+# section08
+## cpp param
+```
+colcon build --packages-select my_cpp_pkg
+ros2 run my_cpp_pkg number_publisher
+ros2 topic echo /number
+
+ros2 run my_cpp_pkg number_publisher --ros-args -p number:=3 -p timer_period:=0.5
+
+colcon build --packages-select my_py_pkg --symlink-install
+
+ros2 run my_py_pkg number_publisher
+ros2 topic echo /number
+
+ros2 run my_py_pkg number_publisher --ros-args -p number:=3 -p timer_period:=0.5
+
+```
