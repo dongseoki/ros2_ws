@@ -252,3 +252,37 @@ ros2 topic echo /number
 ros2 run my_py_pkg number_publisher --ros-args -p number:=3 -p timer_period:=0.5
 
 ```
+## param with turtlesim
+```
+ros2 run turtlesim turtlesim_node
+ros2 param list
+ros2 param get /turtlesim background_r
+ros2 param set /turtlesim background_r 255
+ros2 run turtlesim turtlesim_node --ros-args -p background_r:=255
+
+dslee@dslee-To-Be-Filled-By-O-E-M:~/ros2_ws$ ros2 service list
+/clear
+/kill
+/reset
+/spawn
+/turtle1/set_pen
+/turtle1/teleport_absolute
+/turtle1/teleport_relative
+/turtlesim/describe_parameters
+/turtlesim/get_parameter_types
+/turtlesim/get_parameters
+/turtlesim/get_type_description
+/turtlesim/list_parameters
+/turtlesim/set_parameters
+/turtlesim/set_parameters_atomically
+
+
+dslee@dslee-To-Be-Filled-By-O-E-M:~/ros2_ws$ ros2 service call /turtlesim/get_parameters \
+  rcl_interfaces/srv/GetParameters \
+  "{names: [background_r, background_g, background_b]}"
+waiting for service to become available...
+requester: making request: rcl_interfaces.srv.GetParameters_Request(names=['background_r', 'background_g', 'background_b'])
+
+response:
+rcl_interfaces.srv.GetParameters_Response(values=[rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=255, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]), rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=86, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]), rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=255, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[])])
+```
