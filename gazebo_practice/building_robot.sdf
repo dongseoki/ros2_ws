@@ -93,6 +93,77 @@
                     </geometry>
                 </collision>
             </link>
+            <link name='left_wheel'>
+                <pose relative_to="chassis">-0.5 0.6 0 -1.5707 0 0</pose>
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.043333</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.043333</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.08</izz>
+                    </inertia>
+                </inertial>
+                <visual name='visual'>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.4</radius>
+                            <length>0.2</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>1.0 0.0 0.0 1</ambient>
+                        <diffuse>1.0 0.0 0.0 1</diffuse>
+                        <specular>1.0 0.0 0.0 1</specular>
+                    </material>
+                </visual>
+                <collision name='collision'>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.4</radius>
+                            <length>0.2</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+            </link>
+            <!--The same as left wheel but with different position-->
+            <link name='right_wheel'>
+                <pose relative_to="chassis">-0.5 -0.6 0 -1.5707 0 0</pose> <!--angles are in radian-->
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.043333</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.043333</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.08</izz>
+                    </inertia>
+                </inertial>
+                <visual name='visual'>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.4</radius>
+                            <length>0.2</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>1.0 0.0 0.0 1</ambient>
+                        <diffuse>1.0 0.0 0.0 1</diffuse>
+                        <specular>1.0 0.0 0.0 1</specular>
+                    </material>
+                </visual>
+                <collision name='collision'>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.4</radius>
+                            <length>0.2</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+            </link>            
         </model>
     </world>
 </sdf>
