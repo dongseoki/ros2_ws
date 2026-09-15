@@ -69,7 +69,7 @@ ros2 run my_py_pkg smartphone
 ```sh
 colcon build --packages-select my_cpp_pkg
 source install/setup.bash
-ros2 run my_cpp_pag robot_news_station
+ros2 run my_cpp_pkg robot_news_station
 ros2 node list
 ros2 node info /robot_news_station
 ros2 topic echo /robot_news
@@ -300,4 +300,11 @@ ros2 run my_py_pkg number_publisher \
     -r __node:=pub2
 
 ros2 topic echo /number
+```
+
+## activity 05-1
+```sh
+colcon build --packages-select my_cpp_pkg
+source install/setup.bash
+ros2 run my_cpp_pkg robot_news_station --ros-args -p robot_name:="R3"
 ```
