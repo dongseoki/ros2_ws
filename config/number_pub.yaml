@@ -1,0 +1,9 @@
+pub1:
+  ros__parameters:
+    number: 3
+    timer_period: 0.5
+  
+pub2:
+  ros__parameters:
+    number: 7
+    timer_period: 2.0

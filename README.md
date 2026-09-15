@@ -286,3 +286,18 @@ requester: making request: rcl_interfaces.srv.GetParameters_Request(names=['back
 response:
 rcl_interfaces.srv.GetParameters_Response(values=[rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=255, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]), rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=86, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]), rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=255, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[])])
 ```
+
+## paramter with yaml
+```sh
+ros2 run my_py_pkg number_publisher \
+    --ros-args \
+    --params-file config/number_pub.yaml \
+    -r __node:=pub1
+
+ros2 run my_py_pkg number_publisher \
+    --ros-args \
+    --params-file config/number_pub.yaml \
+    -r __node:=pub2
+
+ros2 topic echo /number
+```
