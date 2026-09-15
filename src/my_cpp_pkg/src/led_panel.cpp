@@ -6,10 +6,14 @@
 class LedPanelNode : public rclcpp::Node 
 {
 public:
-    LedPanelNode() : Node("led_panel"), current_led_states{}
+    LedPanelNode() : Node("led_panel")
     {
+        this->declare_parameter("current_led_states", std::vector<bool>{false, false, false});
+        std::vector<bool> values = this->get_parameter("current_led_states").as_bool_array();
+        if (values.size() == 3){
+            std::copy(values.begin(), values.end(), current_led_states.led_states.begin());
+        }
         publisher_ = this->create_publisher<my_robot_interfaces::msg::LedPanelState>("led_panel_state", 10); 
-        // TODO implement interface my_robot_interfaces::srv::SetLed.
         service_ = this->create_service<my_robot_interfaces::srv::SetLed>(
             "set_led_panel_state",
             std::bind(&LedPanelNode::set_led_panel_state, this, std::placeholders::_1, std::placeholders::_2)

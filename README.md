@@ -302,9 +302,17 @@ ros2 run my_py_pkg number_publisher \
 ros2 topic echo /number
 ```
 
-## activity 05-1
+## activity 05-1, 05-2
 ```sh
 colcon build --packages-select my_cpp_pkg
 source install/setup.bash
 ros2 run my_cpp_pkg robot_news_station --ros-args -p robot_name:="R3"
+
+colcon build --packages-select my_cpp_pkg
+source install/setup.bash
+ros2 run my_cpp_pkg led_panel
+ros2 topic echo /led_panel_state
+
+ros2 run my_cpp_pkg led_panel --ros-args --params-file config/led_config.yaml
+ros2 topic echo /led_panel_state
 ```
