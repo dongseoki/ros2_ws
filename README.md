@@ -340,3 +340,21 @@ ros2 service call /number_publisher/set_parameters \
   "{parameters: [{name: number, value: {type: 2, integer_value: 20}}]}"
 
 ```
+
+# 09 launch
+## 1 launch with xml
+```
+colcon build --packages-select my_robot_bringup
+ros2 launch my_robot_bringup number_app.launch.xml
+ros2 topci echo /number
+ros2 topic echo /number_count
+```
+
+## 2 launch with python
+```sh
+ros2 launch my_robot_bringup number_app.launch.py
+
+colcon build --packages-select my_robot_interfaces
+
+ros2 launch my_robot_bringup number_app_from_python_launch.xml
+```
