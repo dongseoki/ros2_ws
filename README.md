@@ -306,13 +306,37 @@ ros2 topic echo /number
 ```sh
 colcon build --packages-select my_cpp_pkg
 source install/setup.bash
+# case1
 ros2 run my_cpp_pkg robot_news_station --ros-args -p robot_name:="R3"
+# case2
+ros2 run my_cpp_pkg robot_news_station \
+  --ros-args \
+  -p robot_name:="R3" \
+  -r __node:=robot_news_station_r3
+ros2 topic echo /robot_news
 
 colcon build --packages-select my_cpp_pkg
 source install/setup.bash
 ros2 run my_cpp_pkg led_panel
-ros2 topic echo /led_panel_state
+ros2 topic echo /led_panel_state`
 
 ros2 run my_cpp_pkg led_panel --ros-args --params-file config/led_config.yaml
 ros2 topic echo /led_panel_state
+```
+
+## extra. parameter callback
+```sh
+colcon build --packages-select my_py_pkg --symlink-insta0ll
+ros2 run my_py_pkg number_publisher
+
+ros2 topic echo /number
+
+ros2 param get /number_publisher number
+
+ros2 param set /number_publisher number 10
+
+ros2 service call /number_publisher/set_parameters \
+  rcl_interfaces/srv/SetParameters \
+  "{parameters: [{name: number, value: {type: 2, integer_value: 20}}]}"
+
 ```
