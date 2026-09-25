@@ -1,5 +1,7 @@
 <launch>
-    <node pkg="my_py_pkg" exec="number_publisher" />
+    <node pkg="my_py_pkg" exec="number_publisher" name="my_number_publisher" namespace="/abc">
+        <param from="$(find-pkg-share my_robot_bringup)/config/number_app.yaml" />
+    </node>
     <!-- <node pkg="my_cpp_pkg" exec="number_counter" /> -->
     <node pkg="my_py_pkg" exec="number_counter" />
 </launch>
