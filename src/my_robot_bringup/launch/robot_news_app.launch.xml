@@ -1,0 +1,20 @@
+<launch>
+    <node pkg="my_cpp_pkg" exec="robot_news_station" name="robot_new_station_glskard">
+        <param name="robot_name" value="glskard" type="str"/>
+        <!-- <param from="$(find-pkg-share my_robot_bringup)/config/robot_news_station.yaml" /> -->
+    </node>
+    <node pkg="my_cpp_pkg" exec="robot_news_station" name="robot_new_station_bb8">
+        <param name="robot_name" value="bb8" type="str"/>
+    </node>
+    <node pkg="my_cpp_pkg" exec="robot_news_station" name="robot_new_station_daneel">
+        <param name="robot_name" value="daneel" type="str"/>
+    </node>
+    <node pkg="my_cpp_pkg" exec="robot_news_station" name="robot_new_station_jander">
+        <param name="robot_name" value="jander" type="str"/>
+    </node>
+    <node pkg="my_cpp_pkg" exec="robot_news_station" name="robot_new_station_c3po">
+        <param name="robot_name" value="c3po" type="str"/>
+    </node>
+    <node pkg="my_cpp_pkg" exec="smartphone">
+    </node>
+</launch>

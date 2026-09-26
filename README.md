@@ -343,7 +343,7 @@ ros2 service call /number_publisher/set_parameters \
 
 # 09 launch
 ## 1 launch with xml
-```
+```sh
 colcon build --packages-select my_robot_bringup
 ros2 launch my_robot_bringup number_app.launch.xml
 ros2 topic echo /number
@@ -357,4 +357,22 @@ ros2 launch my_robot_bringup number_app.launch.py
 colcon build --packages-select my_robot_interfaces
 
 ros2 launch my_robot_bringup number_app_from_python_launch.xml
+```
+
+## activity06
+```sh
+
+colcon build --packages-select my_robot_bringup
+setb
+ros2 launch my_robot_bringup robot_news_app.launch.xml
+
+dslee@dslee-MS-7B89:~/ros2_ws$ ros2 node list
+/robot_new_station_glskard
+/smartphone_node
+dslee@dslee-MS-7B89:~/ros2_ws$ ros2 topic list
+/parameter_events
+/robot_news
+/rosout
+dslee@dslee-MS-7B89:~/ros2_ws$ ros2 topic echo /robot_news
+
 ```
