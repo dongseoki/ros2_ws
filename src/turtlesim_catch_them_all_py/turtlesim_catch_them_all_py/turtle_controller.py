@@ -1,29 +1,89 @@
 #!/usr/bin/env python3
+import math
+import time
+
 import rclpy
+from geometry_msgs.msg import Twist
 from rclpy.node import Node
+from turtlesim.msg import Pose
 
 
-class TurtleControllerNode(Node):  
+class TurtleControllerNode(Node):
     def __init__(self):
-        super().__init__("turtle_controller")  
+        super().__init__("turtle_controller")
         self.get_logger().info(f"{self.get_name()} begin")
+        self.current_pose = None
 
-def move_turtle(turtle_name, x_pos, y_pos):
-    # 1 get turtle_name pos by turtle sim topic
+    def pose_callback(self, msg):
+        self.current_pose = msg
 
-    # x,y 좌표까지 움직일수 있도록 아래에 로직을 작성한다.
-    # 아래 명령어 참고. 아래 명령어의 토픽에 메시지 발행하는 방식으로 작업한다.
-    # ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist \
-    # "{linear: {x: 2.0}, angular: {z: 1.0}}"
+    def move_turtle(self, turtle_name, x_pos, y_pos):
+        pose_sub = self.create_subscription(Pose, f"/{turtle_name}/pose", self.pose_callback, 10)
+        cmd_pub = self.create_publisher(Twist, f"/{turtle_name}/cmd_vel", 10)
 
-    # 거북이가 x,y좌표까지 움직이면 함수를 true를 리턴한다. 에러 발생시 false를 리턴한다.
-    pass
+        try:
+            start_time = time.monotonic()
+            timeout = 5.0
+
+            while rclpy.ok():
+                rclpy.spin_once(self, timeout_sec=0.05)
+                if self.current_pose is not None:
+                    break
+                if time.monotonic() - start_time > timeout:
+                    return False
+
+            tolerance = 0.1
+            while rclpy.ok():
+                rclpy.spin_once(self, timeout_sec=0.05)
+
+                if self.current_pose is None:
+                    if time.monotonic() - start_time > timeout:
+                        return False
+                    continue
+
+                dx = x_pos - self.current_pose.x
+                dy = y_pos - self.current_pose.y
+                distance = math.hypot(dx, dy)
+
+                if distance < tolerance:
+                    cmd_pub.publish(Twist())
+                    return True
+
+                target_yaw = math.atan2(dy, dx)
+                yaw_error = _normalize_angle(target_yaw - self.current_pose.theta)
+
+                cmd = Twist()
+                if abs(yaw_error) > 0.05:
+                    cmd.angular.z = max(-2.0, min(2.0, yaw_error * 2.0))
+                else:
+                    cmd.linear.x = max(0.0, min(2.0, distance))
+
+                cmd_pub.publish(cmd)
+
+            return False
+        finally:
+            self.destroy_subscription(pose_sub)
+            self.destroy_publisher(cmd_pub)
+
+
+def _normalize_angle(angle):
+    while angle > math.pi:
+        angle -= 2.0 * math.pi
+    while angle < -math.pi:
+        angle += 2.0 * math.pi
+    return angle
+
 
 def main(args=None):
     rclpy.init(args=args)
-    node = TurtleControllerNode()  
-    rclpy.spin(node)
-    rclpy.shutdown()
+    node = TurtleControllerNode()
+
+    try:
+        result = node.move_turtle("turtle1", 5.0, 5.0)
+        node.get_logger().info(f"move_turtle result: {result}")
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 
 if __name__ == "__main__":
