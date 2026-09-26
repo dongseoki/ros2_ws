@@ -16,6 +16,18 @@ ros2 pkg create turtlesim_catch_them_all_py  --build-type ament_python --depende
 
 ros2 pkg create turtlesim_catch_them_all_cpp --build-type ament_cmake --dependencies rclcpp
 
+colcon build --packages-select turtlesim_catch_them_all_py turtlesim_catch_them_all_cpp
+
+colcon build --packages-select turtlesim_catch_them_all_py --symlink-install
+
+colcon build --packages-select turtlesim_catch_them_all_cpp
+
+source install/setup.bash
+
+setb
 ros2 run turtlesim_catch_them_all_py turtle_controller
+
+setb
+ros2 run turtlesim_catch_them_all_cpp turtle_spawner
 
 ```
