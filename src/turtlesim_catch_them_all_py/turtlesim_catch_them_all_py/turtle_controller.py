@@ -13,9 +13,27 @@ class TurtleControllerNode(Node):
         super().__init__("turtle_controller")
         self.get_logger().info(f"{self.get_name()} begin")
         self.current_pose = None
+        self.target_turtle_idx = 0
         time.sleep(5)
-        result = self.move_turtle("turtle1", 5.0, 5.0)
-        self.get_logger().info(f"move_turtle result: {result}")
+        
+        while(True):
+            self.get_logger().info(f"try to get_close_turtle")
+            kill_target_turtle  = self.get_close_turtle()
+            self.get_logger().info(f"try to go to target turtle {kill_target_turtle[0]} close")
+            result = self.move_turtle("turtle1", kill_target_turtle[1], kill_target_turtle[2])
+            self.get_logger().info(f"move_turtle result: {result}")
+            self.get_logger().info(f"try to remove turtle")
+            self.kill_turtle(kill_target_turtle[0])
+
+    def kill_turtle(self, name):
+        pass
+
+    def get_close_turtle(self):
+        turtle_pos = [("asdf",5.0, 5.0), ("zxcv", 7.0, 7.0)]
+        target_idx = self.target_turtle_idx
+        self.target_turtle_idx = 1 - self.target_turtle_idx
+        return turtle_pos[target_idx]
+
 
     def pose_callback(self, msg):
         self.current_pose = msg
