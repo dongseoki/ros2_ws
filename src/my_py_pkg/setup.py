@@ -33,6 +33,8 @@ setup(
             "add_two_ints_client_no_oop = my_py_pkg.add_two_ints_client_no_oop:main",
             "add_two_ints_client = my_py_pkg.add_two_ints_client:main",
             "hardware_status_publisher = my_py_pkg.hardware_status_publisher:main",
+            "count_action_client = my_py_pkg.count_action_client:main",
+            "count_action_server = my_py_pkg.count_action_server:main",
         ],
     },
 )

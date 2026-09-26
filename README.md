@@ -376,3 +376,17 @@ dslee@dslee-MS-7B89:~/ros2_ws$ ros2 topic list
 dslee@dslee-MS-7B89:~/ros2_ws$ ros2 topic echo /robot_news
 
 ```
+
+# action test
+```sh
+colcon build --packages-select my_robot_interfaces
+colcon build --packages-select my_py_pkg --symlink-install
+
+# 
+setb
+ros2 run my_py_pkg count_action_server
+
+# another terminal
+setb
+ros2 run my_py_pkg count_action_client
+```

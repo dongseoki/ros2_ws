@@ -1,0 +1,22 @@
+int32 target
+---
+int32 result
+---
+int32 current
+
+# ---를 기준으로:
+# 
+# Goal
+# int32 target
+# 
+# → "몇까지 셀 것인가?"
+# 
+# Result
+# int32 result
+# 
+# → 작업이 끝난 최종 결과
+# 
+# Feedback
+# int32 current
+# 
+# → 현재 얼마나 진행됐는지
