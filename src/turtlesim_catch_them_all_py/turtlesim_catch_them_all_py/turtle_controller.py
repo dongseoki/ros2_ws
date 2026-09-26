@@ -13,6 +13,9 @@ class TurtleControllerNode(Node):
         super().__init__("turtle_controller")
         self.get_logger().info(f"{self.get_name()} begin")
         self.current_pose = None
+        time.sleep(5)
+        result = self.move_turtle("turtle1", 5.0, 5.0)
+        self.get_logger().info(f"move_turtle result: {result}")
 
     def pose_callback(self, msg):
         self.current_pose = msg
@@ -77,14 +80,8 @@ def _normalize_angle(angle):
 def main(args=None):
     rclpy.init(args=args)
     node = TurtleControllerNode()
-
-    try:
-        result = node.move_turtle("turtle1", 5.0, 5.0)
-        node.get_logger().info(f"move_turtle result: {result}")
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
-
+    rclpy.spin(node)
+    rclpy.shutdown()
 
 if __name__ == "__main__":
     main()
