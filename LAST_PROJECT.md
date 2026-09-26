@@ -24,6 +24,8 @@ ros2 pkg create turtlesim_catch_them_all_cpp --build-type ament_cmake --dependen
 
 colcon build --packages-select turtlesim_catch_them_all_py turtlesim_catch_them_all_cpp
 
+colcon build --packages-select my_robot_interfaces
+
 colcon build --packages-select turtlesim_catch_them_all_py --symlink-install
 
 colcon build --packages-select turtlesim_catch_them_all_cpp
