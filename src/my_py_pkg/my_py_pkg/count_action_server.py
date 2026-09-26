@@ -1,4 +1,4 @@
-import asyncio
+import time
 
 import rclpy
 from rclpy.action import ActionServer
@@ -19,7 +19,7 @@ class CountActionServer(Node):
             self.execute_callback
         )
 
-    async def execute_callback(self, goal_handle):
+    def execute_callback(self, goal_handle):
         self.get_logger().info(
             f'Goal received: {goal_handle.request.target}'
         )
@@ -27,7 +27,7 @@ class CountActionServer(Node):
         feedback_msg = Count.Feedback()
 
         for i in range(1, goal_handle.request.target + 1):
-            await asyncio.sleep(1)
+            time.sleep(1)
 
             feedback_msg.current = i
             goal_handle.publish_feedback(feedback_msg)
