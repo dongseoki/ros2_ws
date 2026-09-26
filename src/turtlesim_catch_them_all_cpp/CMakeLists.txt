@@ -8,11 +8,11 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(example_interfaces REQUIRED)
+find_package(turtlesim REQUIRED)
 find_package(my_robot_interfaces REQUIRED)
 
-add_executable(turtle_spawner  src/turtle_spawner.cpp)
-ament_target_dependencies(turtle_spawner  rclcpp example_interfaces)
+add_executable(turtle_spawner src/turtle_spawner.cpp)
+ament_target_dependencies(turtle_spawner rclcpp turtlesim)
 
 install(TARGETS
   turtle_spawner
