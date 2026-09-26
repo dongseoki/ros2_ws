@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import math
+from types import SimpleNamespace
 
 from turtlesim.msg import Pose
 
@@ -34,21 +35,15 @@ class FakeController:
 
     def __init__(self):
         self.current_pose = None
+        self.alive_turtles = []
         self.publisher = FakePublisher()
-        self.destroyed_subscription = False
         self.destroyed_publisher = False
 
     def pose_callback(self, message):
         self.current_pose = message
 
-    def create_subscription(self, *_args):
-        return object()
-
     def create_publisher(self, *_args):
         return self.publisher
-
-    def destroy_subscription(self, _subscription):
-        self.destroyed_subscription = True
 
     def destroy_publisher(self, _publisher):
         self.destroyed_publisher = True
@@ -75,6 +70,41 @@ def test_normalize_angle_wraps_across_pi():
         turtle_controller._normalize_angle(math.pi + 0.1), -math.pi + 0.1)
 
 
+def test_alive_turtles_callback_stores_published_list():
+    node = FakeController()
+    turtles = [SimpleNamespace(name='turtle_a', x_pos=1.0, y_pos=2.0)]
+
+    turtle_controller.TurtleControllerNode.alive_turtles_callback(
+        node, SimpleNamespace(list=turtles))
+
+    assert node.alive_turtles is turtles
+
+
+def test_get_close_turtle_returns_nearest_turtle():
+    node = FakeController()
+    node.current_pose = Pose(x=3.0, y=4.0, theta=0.0)
+    node.alive_turtles = [
+        SimpleNamespace(name='far', x_pos=10.0, y_pos=10.0),
+        SimpleNamespace(name='nearest', x_pos=4.0, y_pos=4.0),
+        SimpleNamespace(name='also_far', x_pos=0.0, y_pos=0.0),
+    ]
+
+    result = turtle_controller.TurtleControllerNode.get_close_turtle(node)
+
+    assert result == ('nearest', 4.0, 4.0)
+
+
+def test_get_close_turtle_returns_none_without_pose_or_alive_turtles():
+    node = FakeController()
+    node.alive_turtles = [
+        SimpleNamespace(name='turtle_a', x_pos=1.0, y_pos=2.0)]
+    assert turtle_controller.TurtleControllerNode.get_close_turtle(node) is None
+
+    node.current_pose = Pose(x=3.0, y=4.0, theta=0.0)
+    node.alive_turtles = []
+    assert turtle_controller.TurtleControllerNode.get_close_turtle(node) is None
+
+
 def test_move_turtle_returns_true_and_stops_at_goal(monkeypatch):
     node = FakeController()
     monkeypatch.setattr(turtle_controller.rclpy, 'ok', lambda: True)
@@ -90,7 +120,6 @@ def test_move_turtle_returns_true_and_stops_at_goal(monkeypatch):
     assert result is True
     assert node.publisher.messages[-1].linear.x == 0.0
     assert node.publisher.messages[-1].angular.z == 0.0
-    assert node.destroyed_subscription
     assert node.destroyed_publisher
 
 
@@ -143,5 +172,4 @@ def test_move_turtle_returns_false_after_movement_deadline(monkeypatch):
     assert len(node.publisher.messages) > 1
     assert node.publisher.messages[-1].linear.x == 0.0
     assert node.publisher.messages[-1].angular.z == 0.0
-    assert node.destroyed_subscription
     assert node.destroyed_publisher

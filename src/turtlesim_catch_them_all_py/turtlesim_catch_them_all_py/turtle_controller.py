@@ -3,6 +3,7 @@ import math
 import time
 
 from geometry_msgs.msg import Twist
+from my_robot_interfaces.msg import TurtleArray
 import rclpy
 from rclpy.node import Node
 from turtlesim.msg import Pose
@@ -20,18 +21,25 @@ ANGULAR_GAIN = 8.0
 
 
 class TurtleControllerNode(Node):
-    """Drive a turtlesim turtle toward alternating target positions."""
+    """Drive a turtlesim turtle toward the nearest alive turtle."""
 
     def __init__(self):
         super().__init__('turtle_controller')
         self.get_logger().info(f'{self.get_name()} begin')
         self.current_pose = None
-        self.target_turtle_idx = 0
-        time.sleep(5)
+        self.alive_turtles = []
+        self.create_subscription(
+            TurtleArray, '/alive_turtles', self.alive_turtles_callback, 10)
+        self.create_subscription(
+            Pose, '/turtle1/pose', self.pose_callback, 10)
 
-        while True:
-            self.get_logger().info('try to get_close_turtle')
+        while rclpy.ok():
+            rclpy.spin_once(self, timeout_sec=CONTROL_PERIOD)
             kill_target_turtle = self.get_close_turtle()
+            if kill_target_turtle is None:
+                self.get_logger().info('kill_target_turtle is None')
+                continue
+            self.get_logger().info('try to get_close_turtle')
             self.get_logger().info(
                 f'try to go to target turtle {kill_target_turtle[0]} close')
             result = self.move_turtle(
@@ -44,21 +52,29 @@ class TurtleControllerNode(Node):
         pass
 
     def get_close_turtle(self):
-        turtle_pos = [('asdf', 1.0, 1.0), ('zxcv', 10.0, 10.0)]
-        target_idx = self.target_turtle_idx
-        self.target_turtle_idx = 1 - self.target_turtle_idx
-        return turtle_pos[target_idx]
+        if self.current_pose is None or not self.alive_turtles:
+            return None
+
+        nearest_turtle = min(
+            self.alive_turtles,
+            key=lambda turtle: math.hypot(
+                turtle.x_pos - self.current_pose.x,
+                turtle.y_pos - self.current_pose.y))
+        return (
+            nearest_turtle.name,
+            nearest_turtle.x_pos,
+            nearest_turtle.y_pos)
+
+    def alive_turtles_callback(self, msg):
+        self.alive_turtles = msg.list
 
     def pose_callback(self, msg):
         self.current_pose = msg
 
     def move_turtle(self, turtle_name, x_pos, y_pos):
         self.current_pose = None
-        pose_sub = None
         cmd_pub = None
         try:
-            pose_sub = self.create_subscription(
-                Pose, f'/{turtle_name}/pose', self.pose_callback, 10)
             cmd_pub = self.create_publisher(Twist, f'/{turtle_name}/cmd_vel', 10)
 
             pose_deadline = time.monotonic() + POSE_TIMEOUT
@@ -95,12 +111,8 @@ class TurtleControllerNode(Node):
                 if cmd_pub is not None:
                     cmd_pub.publish(Twist())
             finally:
-                try:
-                    if pose_sub is not None:
-                        self.destroy_subscription(pose_sub)
-                finally:
-                    if cmd_pub is not None:
-                        self.destroy_publisher(cmd_pub)
+                if cmd_pub is not None:
+                    self.destroy_publisher(cmd_pub)
 
 
 def _compute_velocity_command(distance, yaw_error):
