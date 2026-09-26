@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 import math
 import time
+from concurrent.futures import CancelledError
 
 from geometry_msgs.msg import Twist
+
 from my_robot_interfaces.msg import TurtleArray
+from my_robot_interfaces.srv import CatchTurtle
+
 import rclpy
 from rclpy.node import Node
+
 from turtlesim.msg import Pose
 
 
 POSE_TIMEOUT = 5.0
 MOVEMENT_TIMEOUT = 3.0
+CATCH_SERVICE_WAIT_TIMEOUT = 1.0
+CATCH_RESPONSE_TIMEOUT = 3.0
 POSITION_TOLERANCE = 0.1
 HEADING_TOLERANCE = 0.2
 CONTROL_PERIOD = 0.01
@@ -32,24 +39,74 @@ class TurtleControllerNode(Node):
             TurtleArray, '/alive_turtles', self.alive_turtles_callback, 10)
         self.create_subscription(
             Pose, '/turtle1/pose', self.pose_callback, 10)
+        self.catch_turtle_client = self.create_client(
+            CatchTurtle, 'catch_turtle')
 
         while rclpy.ok():
             rclpy.spin_once(self, timeout_sec=CONTROL_PERIOD)
-            kill_target_turtle = self.get_close_turtle()
-            if kill_target_turtle is None:
-                self.get_logger().info('kill_target_turtle is None')
+            catch_target_turtle = self.get_close_turtle()
+            if catch_target_turtle is None:
+                self.get_logger().info('catch_target_turtle is None')
                 continue
             self.get_logger().info('try to get_close_turtle')
             self.get_logger().info(
-                f'try to go to target turtle {kill_target_turtle[0]} close')
+                f'try to go to target turtle {catch_target_turtle[0]} close')
             result = self.move_turtle(
-                'turtle1', kill_target_turtle[1], kill_target_turtle[2])
+                'turtle1', catch_target_turtle[1], catch_target_turtle[2])
             self.get_logger().info(f'move_turtle result: {result}')
-            self.get_logger().info('try to remove turtle')
-            self.kill_turtle(kill_target_turtle[0])
+            self.get_logger().info('try to catch turtle')
+            self.catch_turtle(catch_target_turtle[0])
 
-    def kill_turtle(self, name):
-        pass
+    def catch_turtle(self, name):
+        """Request that the spawner catch the named turtle."""
+        if not self.catch_turtle_client.wait_for_service(
+                timeout_sec=CATCH_SERVICE_WAIT_TIMEOUT):
+            self.get_logger().error(
+                "The 'catch_turtle' service is not available.")
+            return False
+
+        request = CatchTurtle.Request()
+        request.name = name
+        future = self.catch_turtle_client.call_async(request)
+        response_deadline = time.monotonic() + CATCH_RESPONSE_TIMEOUT
+        while rclpy.ok() and not future.done():
+            remaining = response_deadline - time.monotonic()
+            if remaining <= 0.0:
+                self.get_logger().error(
+                    f"Timed out while catching turtle '{name}'.")
+                return False
+            rclpy.spin_once(self, timeout_sec=min(CONTROL_PERIOD, remaining))
+
+        if not future.done():
+            self.get_logger().error(
+                f"Stopped waiting for catch_turtle response for '{name}'.")
+            return False
+
+        try:
+            service_exception = future.exception()
+        except CancelledError as exception:
+            self.get_logger().error(
+                f"Failed to catch turtle '{name}': {exception}")
+            return False
+
+        if service_exception is not None:
+            self.get_logger().error(
+                f"Failed to catch turtle '{name}': {service_exception}")
+            return False
+
+        response = future.result()
+        if response is None:
+            self.get_logger().error(
+                f"The 'catch_turtle' service returned no response "
+                f"for '{name}'.")
+            return False
+        if not response.result:
+            self.get_logger().warning(
+                f"The 'catch_turtle' service failed to catch '{name}'.")
+            return False
+
+        self.get_logger().info(f"Caught turtle '{name}'.")
+        return True
 
     def get_close_turtle(self):
         if self.current_pose is None or not self.alive_turtles:
@@ -66,12 +123,15 @@ class TurtleControllerNode(Node):
             nearest_turtle.y_pos)
 
     def alive_turtles_callback(self, msg):
+        """Store the latest list of alive turtles."""
         self.alive_turtles = msg.list
 
     def pose_callback(self, msg):
+        """Store the latest pose of the controlled turtle."""
         self.current_pose = msg
 
     def move_turtle(self, turtle_name, x_pos, y_pos):
+        """Move the named turtle toward the target position."""
         self.current_pose = None
         cmd_pub = None
         try:
