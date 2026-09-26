@@ -16,4 +16,6 @@ ros2 pkg create turtlesim_catch_them_all_py  --build-type ament_python --depende
 
 ros2 pkg create turtlesim_catch_them_all_cpp --build-type ament_cmake --dependencies rclcpp
 
+ros2 run turtlesim_catch_them_all_py turtle_controller
+
 ```
