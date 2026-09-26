@@ -12,7 +12,7 @@ find_package(turtlesim REQUIRED)
 find_package(my_robot_interfaces REQUIRED)
 
 add_executable(turtle_spawner src/turtle_spawner.cpp)
-ament_target_dependencies(turtle_spawner rclcpp turtlesim)
+ament_target_dependencies(turtle_spawner rclcpp turtlesim my_robot_interfaces)
 
 install(TARGETS
   turtle_spawner
