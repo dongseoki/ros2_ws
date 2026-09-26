@@ -1,3 +1,4 @@
+# todo
 1. 컨트롤 노드 먼저 완성.
 1-1 임의 좌표까지 움직이는 것 구현.
 1-2 핵심 비즈니스 로직 구현 
@@ -11,6 +12,11 @@ WHILE(){
 4. 런치 파일 통합.
 
 
+#  easy run
+ros2 launch my_robot_bringup turtle_track.launch.xml
+
+# 참고
+
 ```sh
 ros2 pkg create turtlesim_catch_them_all_py  --build-type ament_python --dependencies rclpy
 
@@ -22,12 +28,15 @@ colcon build --packages-select turtlesim_catch_them_all_py --symlink-install
 
 colcon build --packages-select turtlesim_catch_them_all_cpp
 
-source install/setup.bash
+colcon build --packages-select my_robot_bringup
 
 setb
 ros2 run turtlesim_catch_them_all_py turtle_controller
 
 setb
 ros2 run turtlesim_catch_them_all_cpp turtle_spawner
+
+setb
+ros2 run turtlesim turtlesim_node
 
 ```
