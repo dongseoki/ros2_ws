@@ -94,4 +94,9 @@ ros2 pkg create turtlesim_catch_them_all  --build-type ament_python --dependenci
 colcon build --packages-select turtlesim_catch_them_all --symlink-install
 setb
 ros2 run turtlesim_catch_them_all turtle_controller
+
+setb
+ros2 run turtlesim_catch_them_all turtle_spawner
+
+
 ```
