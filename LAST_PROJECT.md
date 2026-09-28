@@ -58,10 +58,14 @@ ros2 run turtlesim turtlesim_node
 # test 명령어
 ```sh
 dslee@dslee-MS-7B89:~/ros2_ws$ ros2 service call /catch_turtle my_robot_interfaces/srv/CatchTurtle "{name: 'ktina'}"
+```
 
-The passed service type is invalid
+# lecture solution
+```sh
+ros2 pkg create turtlesim_catch_them_all  --build-type ament_python --dependencies rclpy
 
-dslee@dslee-MS-7B89:~/ros2_ws$ ^C
 
-dslee@dslee-MS-7B89:~/ros2_ws$  이런 오류 뜨는데
+colcon build --packages-select turtlesim_catch_them_all --symlink-install
+setb
+ros2 run turtlesim_catch_them_all turtle_controller
 ```
