@@ -38,7 +38,7 @@ private:
     {
         ++turtle_counter_;
         const std::string name = turtle_name_prefix_ + std::to_string(turtle_counter_);
-        const double x = coordinate_distribution_((random_engine_);
+        const double x = coordinate_distribution_(random_engine_);
         const double y = coordinate_distribution_(random_engine_);
         const double theta = theta_distribution_(random_engine_);
         call_spawn_service(name, x, y, theta);
