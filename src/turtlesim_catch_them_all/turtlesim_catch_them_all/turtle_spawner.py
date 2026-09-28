@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from turtlesim.srv import Spawn
+from turtlesim.srv import Kill
 from functools import partial
 import random
 import math
@@ -10,6 +11,7 @@ from concurrent.futures import Future
 from turtlesim.srv import Spawn
 from my_robot_interfaces.msg import Turtle
 from my_robot_interfaces.msg import TurtleArray
+from my_robot_interfaces.srv import CatchTurtle
 
 
 class TurtleSpawnerNode(Node):  
@@ -22,6 +24,14 @@ class TurtleSpawnerNode(Node):
         self.alive_turtles_:TurtleArray = []
         self.alive_turtles_publisher_ = self.create_publisher(
             TurtleArray, "alive_turtles", 10)
+        self.kill_client_ = self.create_client(Kill, "/kill")
+        self.catch_turtle_service_ = self.create_service(
+            CatchTurtle, "catch_turtle", self.callback_catch_turtle)
+
+    def callback_catch_turtle(self, request: CatchTurtle.Request, response: CatchTurtle.Response):
+        self.call_kill_service(request.name)
+        response.result = True
+        return response
 
     def publish_alive_turtles(self):
         msg:TurtleArray = TurtleArray()
@@ -59,6 +69,25 @@ class TurtleSpawnerNode(Node):
             new_turtle.theta = request.theta
             self.alive_turtles_.append(new_turtle)
             self.publish_alive_turtles()
+
+    def call_kill_service(self, turtle_name):
+        while not self.kill_client_.wait_for_service(1.0):
+            self.get_logger().warn("Waiting for kill service...")
+        
+        request = Kill.Request()
+        request.name = turtle_name
+
+        future = self.kill_client_.call_async(request)
+        future.add_done_callback(
+            partial(self.callback_call_kill_service, turtle_name=turtle_name))
+
+    def callback_call_kill_service(self, future, turtle_name):
+        for (i, turtle) in enumerate(self.alive_turtles_):
+            if turtle.name == turtle_name:
+                del self.alive_turtles_[i]
+                self.publish_alive_turtles()
+                break
+
 
 def main(args=None):
     rclpy.init(args=args)

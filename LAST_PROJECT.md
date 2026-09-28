@@ -90,6 +90,7 @@ ros2 run turtlesim_catch_them_all_cpp turtle_spawner_lecture
 ```sh
 ros2 pkg create turtlesim_catch_them_all  --build-type ament_python --dependencies rclpy
 
+colcon build --packages-select my_robot_interfaces
 
 colcon build --packages-select turtlesim_catch_them_all --symlink-install
 setb
