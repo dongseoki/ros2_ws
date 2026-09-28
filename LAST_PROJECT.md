@@ -60,6 +60,32 @@ ros2 run turtlesim turtlesim_node
 dslee@dslee-MS-7B89:~/ros2_ws$ ros2 service call /catch_turtle my_robot_interfaces/srv/CatchTurtle "{name: 'ktina'}"
 ```
 
+# C++ lecture 노드 테스트 명령어
+먼저 워크스페이스에서 빌드하고, 각 터미널에서 ROS 2 및 워크스페이스 설정을 불러옵니다.
+
+```sh
+cd ~/ros2_ws
+colcon build --packages-select turtlesim_catch_them_all_cpp
+source install/setup.bash
+```
+
+아래 노드들은 별도 터미널에서 실행합니다. `turtlesim_node`는 계속 실행해 둔 상태에서 각 강의용 노드를 **하나씩** 테스트하세요.
+
+```sh
+# 터미널 1: turtlesim 실행
+cd ~/ros2_ws
+source install/setup.bash
+ros2 run turtlesim turtlesim_node
+
+# 터미널 2: turtle1을 (2, 8) 근처로 이동
+cd ~/ros2_ws
+source install/setup.bash
+ros2 run turtlesim_catch_them_all_cpp turtle_controller_lecture
+
+# 터미널 2에서 컨트롤러를 종료한 후: 2초마다 거북이 생성
+ros2 run turtlesim_catch_them_all_cpp turtle_spawner_lecture
+```
+
 # lecture solution
 ```sh
 ros2 pkg create turtlesim_catch_them_all  --build-type ament_python --dependencies rclpy
