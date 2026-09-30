@@ -93,11 +93,17 @@ ros2 pkg create turtlesim_catch_them_all  --build-type ament_python --dependenci
 colcon build --packages-select my_robot_interfaces
 
 colcon build --packages-select turtlesim_catch_them_all --symlink-install
+
+colcon build --packages-select my_robot_bringup
+
 setb
 ros2 run turtlesim_catch_them_all turtle_controller
 
 setb
 ros2 run turtlesim_catch_them_all turtle_spawner
+
+
+ros2 launch my_robot_bringup turtlesim_catch_them_all.launch.xml
 
 
 ```

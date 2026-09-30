@@ -13,15 +13,47 @@ from my_robot_interfaces.srv import CatchTurtle
 class TurtleControllerNode(Node):  
     def __init__(self):
         super().__init__("turtle_controller")  
+
+        # parameter
+        self.declare_parameter("catch_closest_turtle_first", True)
+        self.catch_closest_turtle_first_ = self.get_parameter(
+            "catch_closest_turtle_first").value
+
+        # var
         self.turtle_to_catch_: Turtle = None
         self.pose_: Pose = None
+
+        # publisher
         self.cmd_vel_publisher_ = self.create_publisher(
             Twist, "/turtle1/cmd_vel", 10)
+
+        # subscriber
         self.pose_subscriber_ = self.create_subscription(Pose, "/turtle1/pose", self.callback_pose, 10)
         self.alive_turtles_subscriber_ = self.create_subscription(
             TurtleArray, "alive_turtles", self.callback_alive_turtles, 10)
+
+        # client
         self.catch_turtle_client_ = self.create_client(CatchTurtle, "catch_turtle")
+
+        # timer
         self.controll_loop_timer_ = self.create_timer(0.01, self.control_loop)
+
+    def callback_alive_turtles(self, msg: TurtleArray):
+        if len(msg.list) > 0:
+            if self.catch_closest_turtle_first_:
+                closest_turtle = None
+                closest_turtle_distance = None
+
+                for turtle in msg.list:
+                    dist_x = turtle.pose_x - self.pose_.x
+                    dist_y = turtle.pose_y - self.pose_.y
+                    distance = math.sqrt(dist_x * dist_x + dist_y * dist_y)
+                    if closest_turtle == None or distance < closest_turtle_distance:
+                        closest_turtle = turtle
+                        closest_turtle_distance = distance
+                self.turtle_to_catch_ = closest_turtle
+            else:
+                self.turtle_to_catch_ = msg.turtles[0]
 
     def callback_pose(self, pose: Pose):
         self.pose_ = pose
