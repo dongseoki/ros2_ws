@@ -44,23 +44,19 @@ class TurtleControllerNode(Node):
                 closest_turtle = None
                 closest_turtle_distance = None
 
-                for turtle in msg.list:
-                    dist_x = turtle.pose_x - self.pose_.x
-                    dist_y = turtle.pose_y - self.pose_.y
+                for turtle in msg.list :
+                    dist_x = turtle.x_pos - self.pose_.x
+                    dist_y = turtle.y_pos - self.pose_.y
                     distance = math.sqrt(dist_x * dist_x + dist_y * dist_y)
                     if closest_turtle == None or distance < closest_turtle_distance:
                         closest_turtle = turtle
                         closest_turtle_distance = distance
                 self.turtle_to_catch_ = closest_turtle
             else:
-                self.turtle_to_catch_ = msg.turtles[0]
+                self.turtle_to_catch_ = msg.list[0]
 
     def callback_pose(self, pose: Pose):
         self.pose_ = pose
-
-    def callback_alive_turtles(self, msg: TurtleArray):
-        if len(msg.list) > 0:
-            self.turtle_to_catch_ = msg.list[0]
 
     def control_loop(self):
         if self.pose_ == None or self.turtle_to_catch_ == None:

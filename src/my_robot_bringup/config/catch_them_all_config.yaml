@@ -5,4 +5,4 @@
 /turtle_spawner:
   ros__parameters:
     turtle_name_prefix: "my_turtle"
-    spawn_frequency: 1.5
+    spawn_frequency: 5.0
